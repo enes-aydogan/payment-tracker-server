@@ -1,5 +1,6 @@
 require('dotenv').config({path: './config/.env'});
 const express = require('express');
+var cors = require('cors')
 const app = express();
 
 const db = require('./utils/db');
@@ -8,6 +9,8 @@ const port = process.env.PORT || 3000;
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+app.use(cors())
+
 
 const usrRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
