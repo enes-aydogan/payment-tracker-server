@@ -1,35 +1,32 @@
-const Payment = require('../models/Payment')
 const Period = require('../models/Period');
+const User = require('../models/User');
 
 module.exports.create = async (periodID, body, file) => {
     let {userID, description, price, stuffIDs} = body;
 
     console.log(periodID);
     // find period
-    let period = Period.findOne({_id:periodID});
-    console.log(period.periodName)
-    /*
-    let stuffs = [];
-    
+    let period = await Period.findById(periodID);  
     //stuffs
-    for (var id in stuffIDs.split(',')){
-        stuffs.push({id})
-    }
+    let stuffs = []
+    try{
+        stuffs = stuffIDs.split(',')
+    }catch(e){
 
-    stuffs.push({userID});
-    */
+    }    
+    stuffs.push(userID);
+    
     let payment = {
         description: description,
         price: price,
-        imagePath: file.path//,
-        //stuff:stuffs
+        imagePath: file.path,
+        stuff:stuffs
     };
 
     console.log(period.periodName);
         
     period.payments.push(payment);
     
-
     await period.save();
 
     return payment;

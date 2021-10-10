@@ -11,14 +11,14 @@ const schema = new mongoose.Schema({
     imagePath:{
         type:String,
         required:true
-    }
-    /*,
+    },
+    
     stuff: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         }
-    ]*/
+    ]
 })
 
 module.exports = schema;
