@@ -10,12 +10,6 @@ module.exports.login = async (email, password) => {
     if(!user)
         throw new ErrorResponse('No user', 400)
 
-    console.log("original pass")
-    console.log(user)
-
-    console.log("entered pass")
-    console.log(password)
-    
     let match = await bycrypt.compare(password, user.password);
 
     if(!match)
