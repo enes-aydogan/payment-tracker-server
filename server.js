@@ -10,8 +10,10 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 const usrRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 app.use("/api/v1/users", usrRouter)
+app.use("/api/v1/auth", authRouter)
 
 db.connect()
     .then((result) => {
