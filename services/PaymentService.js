@@ -54,7 +54,7 @@ module.exports.create = async (orgID, req) => {
     period.payments.push(payment)
 
         
-    organization.periods.find((s) => s.status == true).paymetns = period.payments;
+    organization.periods.find((s) => s.status == true).payments = period.payments;
     
     await organization.save();
 

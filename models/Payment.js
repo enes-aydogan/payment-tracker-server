@@ -31,6 +31,10 @@ const schema = new mongoose.Schema({
             type: partnerSchema
         }
     ],
+    date: {
+        type: Date,
+        default: Date.now
+    }
 
 })
 module.exports = schema;
