@@ -18,3 +18,9 @@ module.exports.create = async (props) => {
 
     return user;
 };
+
+module.exports.get = async (userID) => {
+    let user = await User.findById(userID);
+    
+    return user;
+};

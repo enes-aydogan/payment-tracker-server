@@ -13,7 +13,11 @@ const schema = new mongoose.Schema({
         {
             type: Payment
         }
-    ]
+    ],
+    status: {
+        type: Boolean,
+        default: true
+    }
 })
 
-module.exports = mongoose.model('Period', schema)
+module.exports = schema

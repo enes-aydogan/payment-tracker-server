@@ -4,7 +4,7 @@ const router = express.Router();
 
 let { create, get } = periodController;
 
-router.post("/", create);
+router.post("/:id", create);
 router.get("/:id", get);
 
 module.exports = router;

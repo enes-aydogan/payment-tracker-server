@@ -11,7 +11,7 @@ const partnerSchema = new mongoose.Schema({
 })
 
 const schema = new mongoose.Schema({
-    ownerId: {
+    ownerID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },

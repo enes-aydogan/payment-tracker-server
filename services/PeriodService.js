@@ -1,16 +1,22 @@
 const Period = require("../models/Period");
+const Organization = require('../models/Organization')
 
-module.exports.create = async (props) => {
-  let periodName = props;
+module.exports.create = async (orgID, body) => {
+    let {periodName, status} = body;
+    
+    let period = {
+        periodName: periodName,
+        status: status,
+        payments: [],
+    };
 
-  let period = new Period({
-    periodName: periodName,
-    payments: [],
-  });
+    let organization = await Organization.findById(orgID)
 
-  await period.save();
+    organization.periods.push(period)
 
-  return period;
+    await organization.save()
+
+    return period;
 };
 
 module.exports.get = async (id) => {

@@ -2,9 +2,14 @@ const asyncHandler = require("../middlewares/async");
 const periodService = require("../services/PeriodService");
 
 module.exports.create = asyncHandler(async (req, res, next) => {
-  let periodName = req.body.periodName;
+  let periodName = req.body;
+  let orgID = req.params.id;
 
-  let period = await periodService.create(periodName);
+  console.log(periodName)
+  console.log(orgID)
+  console.log("end : controller side")
+
+  let period = await periodService.create(orgID, req.body);
   res.status(201).json({ success: true, data: period });
 });
 

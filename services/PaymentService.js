@@ -1,12 +1,25 @@
+const Organization = require('../models/Organization');
 const Period = require('../models/Period');
 const User = require('../models/User');
+const auth = require('../middlewares/auth')
 
-module.exports.create = async (periodID, body, file) => {
-    let {userID, description, price, stuffIDs} = body;
+module.exports.create = async (orgID, req) => {
+    let {description, price, stuffIDs} = req.body;
+    let userID = req.user._id
+    //console.log(req);
+    //console.log(userID);
 
-    console.log(stuffIDs);
-    // find period
-    let period = await Period.findById(periodID);  
+    // find organization
+    let organization = await Organization.findById(orgID).select('+periods');
+    let period = organization.periods.find((s) => s.status == true);
+
+
+    console.log("period")
+    console.log(period)
+    
+    //if(!period)
+        //return error
+        
     //stuffs
     let stuffs = []
     let partnerPays = []
@@ -31,17 +44,19 @@ module.exports.create = async (periodID, body, file) => {
     }
     
     let payment = {
+        ownerID: userID,
         description: description,
         price: price,
-        imagePath: file.path,
+        imagePath: req.file.path,
         partnerPays: partnerPays
     };
 
-    console.log(period.periodName);
+    period.payments.push(payment)
+
         
-    period.payments.push(payment);
+    organization.periods.find((s) => s.status == true).paymetns = period.payments;
     
-    await period.save();
+    await organization.save();
 
     return payment;
 }
