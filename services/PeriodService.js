@@ -1,14 +1,19 @@
-const Period = require('../models/Period');
+const Period = require("../models/Period");
 
 module.exports.create = async (props) => {
-    let periodName = props;
+  let periodName = props;
 
-    let period = new Period({
-        periodName: periodName,
-        payments: []
-    });
+  let period = new Period({
+    periodName: periodName,
+    payments: [],
+  });
 
-    await period.save();
+  await period.save();
 
-    return period;
-}
+  return period;
+};
+
+module.exports.get = async (id) => {
+  let period = await Period.findById(id);
+  return period;
+};
