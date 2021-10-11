@@ -7,6 +7,6 @@ const auth = require('../middlewares/auth')
 let {create} = paymentController
 let {checkAuth} = auth
 
-router.post('/:id', checkAuth, uploadImage, express.bodyParser({limit: '50mb'}), create)
+router.post('/:id', checkAuth, uploadImage, create)
 
 module.exports = router;
