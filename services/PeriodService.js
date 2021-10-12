@@ -19,7 +19,7 @@ module.exports.create = async (orgID, body) => {
 
     return period;
 };
-
+// get single period
 module.exports.get = async (id) => {
   let period = await Period.findById(id);
   return period;

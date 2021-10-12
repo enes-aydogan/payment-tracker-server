@@ -11,7 +11,8 @@ const schema = new mongoose.Schema({
     },
     periods: [
         {
-            type: periodSchema 
+            type: periodSchema,
+            select: false
         }
     ]
 
