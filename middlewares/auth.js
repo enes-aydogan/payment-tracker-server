@@ -11,6 +11,5 @@ exports.checkAuth = asyncHandler(async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decoded.id);
     req.user = await UserService.get(decoded.id);
-    console.log(req.user);
     next();
 })

@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const OrgUser = require("../models/OrgUser");
 
 module.exports.create = async (props) => {
   let { firstName, lastName, email, password } = props;
@@ -23,4 +24,42 @@ module.exports.get = async (userID) => {
   let user = await User.findById(userID);
 
   return user;
+};
+
+module.exports.getUserInfo = async (req) => {
+  let userID = req.user._id
+
+  let userInfo = {}
+
+  let user = await User.findById(userID);
+  let organisations = await OrgUser.find({userID: userID}).populate('orgID');
+  console.log(user);
+
+  var paymentList = [];
+  for(var orgID in organisations){
+    //console.log(organisations[orgID])
+    var totalPayment = 0
+    var periods = organisations[orgID]['orgID']['periods']    
+    for(var perID in periods)
+    {
+      if(periods[perID]['status'] == true)
+      {
+        var payments = periods[perID]['payments']
+        for(var paymentID in payments)
+        {
+          if(payments[paymentID]['ownerID'].toString() == userID)
+          {
+            totalPayment += payments[paymentID]['price'];
+          }
+        }
+        
+        break;
+      }
+    }
+    paymentList.push({orgName:organisations[orgID]['orgID']['name'], totalPayment: totalPayment})
+
+  }
+  userInfo = {user:{firstName: user['firstName'], lastName: user['lastName']}, payments: paymentList}
+
+  return userInfo;
 };
