@@ -3,6 +3,7 @@ const Period = require('../models/Period');
 const User = require('../models/User');
 const auth = require('../middlewares/auth')
 const OrgUser = require('../models/OrgUser');
+const mongoose = require('mongoose')
 
 module.exports.create = async (orgID, req) => {
     let {description, price, stuffIDs} = req.body;
@@ -14,10 +15,6 @@ module.exports.create = async (orgID, req) => {
     let organization = await Organization.findById(orgID).select('+periods');
     let period = organization.periods.find((s) => s.status == true);
 
-
-    console.log("period")
-    console.log(period)
-    
     //if(!period)
         //return error
         
@@ -29,6 +26,9 @@ module.exports.create = async (orgID, req) => {
     }catch(e){
 
     }
+
+    console.log("STUFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
+    console.log(stuffIDs);
 
     if(stuffs.length > 0)
     {
@@ -73,13 +73,18 @@ module.exports.getInfo = async (req) => {
         let users = await OrgUser.find({orgID: orgs[id].orgID['_id']}).populate('userID')
         var us = []
         for(var uid in users){
-            console.log(users[uid])
-            us.push({userID: users[uid]['userID']['_id'], firstName: users[uid]['userID']['firstName']})
+            console.log("--start--")
+            console.log(users[uid]['userID']['_id'])
+            console.log(mongoose.Types.ObjectId(userID))
+            console.log("--endd--")
+            if(users[uid]['userID']['_id'].toString() != userID)
+            {
+                us.push({userID: users[uid]['userID']['_id'], firstName: users[uid]['userID']['firstName']})
+            }
         }
         orgUsers.push({orgID: orgs[id].orgID['_id'], orgName:orgs[id].orgID['name'], users: us})
     }
 
-    console.log(orgUsers)
 
     return orgUsers
 }
