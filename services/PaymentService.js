@@ -22,13 +22,11 @@ module.exports.create = async (orgID, req) => {
     let stuffs = []
     let partnerPays = []
     try{
-        stuffs = stuffIDs.split(',')
+        if(stuffIDs != "")
+            stuffs = stuffIDs.split(',')
     }catch(e){
 
     }
-
-    console.log("STUFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
-    console.log(stuffIDs);
 
     if(stuffs.length > 0)
     {
