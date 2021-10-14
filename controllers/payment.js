@@ -15,3 +15,8 @@ module.exports.getInfo = asyncHandler(async (req, res, next) => {
   let payment = await paymentService.getInfo(req);
   res.status(201).json({ success: true, data: payment });
 });
+
+module.exports.ownPayments = asyncHandler(async (req, res, next) => {
+  let payments = await paymentService.ownPayments(req);
+  res.status(201).json({ success: true, data: payments });
+});
