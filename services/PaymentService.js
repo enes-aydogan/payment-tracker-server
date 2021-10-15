@@ -89,6 +89,39 @@ module.exports.getInfo = async (req) => {
 // get all own payments
 module.exports.ownPayments = async (req) => {
   let userID = req.user._id;
+  let organisations = await OrgUser.find({ userID: userID })
+    .populate("orgID")
+    .lean();
+  var paymentList = [];
+  for (var orgID in organisations) {
+    var periods = organisations[orgID]["orgID"]["periods"];
+    for (var perID in periods) {
+      if (periods[perID]["status"] == true) {
+        var payments = periods[perID]["payments"];
+        for (var paymentID in payments) {
+          if (payments[paymentID]["ownerID"].toString() == userID) {
+            var payment = payments[paymentID];
+            for (var pID in payment["partnerPays"]) {
+              var user = await User.findById(
+                payment["partnerPays"][pID].PartnerId
+              );
+
+              payment["partnerPays"][pID].FullName =
+                user.firstName + " " + user.lastName;
+            }
+            paymentList.push(payment);
+          }
+        }
+        break;
+      }
+    }
+  }
+  return paymentList;
+};
+
+// get all own debt
+module.exports.ownDebt = async (req) => {
+  let userID = req.user._id;
   let organisations = await OrgUser.find({ userID: userID }).populate("orgID");
 
   var paymentList = [];
@@ -98,13 +131,16 @@ module.exports.ownPayments = async (req) => {
       if (periods[perID]["status"] == true) {
         var payments = periods[perID]["payments"];
         for (var paymentID in payments) {
-          if (payments[paymentID]["ownerID"].toString() == userID) {
-            paymentList.push(payments[paymentID]);
-          }
+          pay = payments[paymentID]["partnerPays"];
+          paymentList.push(pay);
         }
         break;
       }
     }
+  }
+
+  for (var pays in paymentList) {
+    console.log(paymentList[pays]);
   }
   return paymentList;
 };
