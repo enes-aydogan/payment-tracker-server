@@ -65,10 +65,8 @@ module.exports.getInfo = async (req) => {
     );
     var us = [];
     for (var uid in users) {
-      console.log("--start--");
       console.log(users[uid]["userID"]["_id"]);
       console.log(mongoose.Types.ObjectId(userID));
-      console.log("--endd--");
       if (users[uid]["userID"]["_id"].toString() != userID) {
         us.push({
           userID: users[uid]["userID"]["_id"],
@@ -122,7 +120,6 @@ module.exports.ownPayments = async (req) => {
 // get all own debt
 module.exports.ownDebt = async (req) => {
   let userID = req.user._id;
-  console.log("own id: " + userID);
   let organisations = await OrgUser.find({ userID: userID })
     .populate("orgID")
     .lean();
