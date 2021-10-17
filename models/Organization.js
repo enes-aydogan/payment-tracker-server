@@ -14,7 +14,10 @@ const schema = new mongoose.Schema({
             type: periodSchema,
             select: false
         }
-    ]
+    ],
+    ownerID: {
+        type: mongoose.Schema.Types.ObjectId
+    }
 
 })
 

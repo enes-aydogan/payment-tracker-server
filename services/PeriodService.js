@@ -70,6 +70,16 @@ module.exports.finalize = async (id) => {
     console.log('test')
     organization.periods.find((s) => s.status == true).status = false;
 
+    var date = new Date()
+    dateStr = date.getMonth()+'/'+ date.getDate()+'/'+date.getFullYear()
+
+    period = {
+        periodName: dateStr + ' Dönemi',
+        payments: []
+    }
+
+    organization.periods.push(period);
+
     await organization.save()
 
     return period

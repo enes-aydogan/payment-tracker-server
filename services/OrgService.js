@@ -1,11 +1,13 @@
 const Organization = require('../models/Organization');
 
-module.exports.create = async (props) => {
-    let {name, address} = props;
+module.exports.create = async (req) => {
+    let {name, address} = req.body;
+    let userID = req.user._id;
 
     let organization = new Organization({
         name: name,
-        address: address
+        address: address,
+        ownerID: userID
     });
 
     await organization.save();
