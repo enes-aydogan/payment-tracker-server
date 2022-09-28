@@ -8,8 +8,6 @@ const mongoose = require("mongoose");
 module.exports.create = async (orgID, req) => {
   let { description, price, stuffIDs } = req.body;
   let userID = req.user._id;
-  //console.log(req);
-  //console.log(userID);
 
   // find organization
   let organization = await Organization.findById(orgID).select("+periods");
@@ -21,10 +19,11 @@ module.exports.create = async (orgID, req) => {
   //stuffs
   let stuffs = [];
   let partnerPays = [];
+  
   try {
     if (stuffIDs != "") stuffs = stuffIDs.split(",");
   } catch (e) {}
-
+  
   if (stuffs.length > 0) {
     let partnerPrice = price / (stuffs.length + 1);
     for (var id in stuffs) {
@@ -39,7 +38,7 @@ module.exports.create = async (orgID, req) => {
     ownerID: userID,
     description: description,
     price: price,
-    imagePath: req.file.path,
+    imagePath: "",
     partnerPays: partnerPays,
   };
 
@@ -65,8 +64,6 @@ module.exports.getInfo = async (req) => {
     );
     var us = [];
     for (var uid in users) {
-      console.log(users[uid]["userID"]["_id"]);
-      console.log(mongoose.Types.ObjectId(userID));
       if (users[uid]["userID"]["_id"].toString() != userID) {
         us.push({
           userID: users[uid]["userID"]["_id"],
@@ -183,7 +180,6 @@ module.exports.ownPastPayments = async (req) => {
     var periods = organisations[orgID]["orgID"]["periods"];
     for (var perID in periods) {
       if (!periods[perID]["status"]) {
-        console.log(periods[perID]["status"])
         paymentList = [];
 
         var payments = periods[perID]["payments"];

@@ -67,7 +67,6 @@ module.exports.finalize = async (id) => {
 
     // set status of period
     //period.status = false;
-    console.log('test')
     organization.periods.find((s) => s.status == true).status = false;
 
     var date = new Date()

@@ -9,7 +9,6 @@ exports.checkAuth = asyncHandler(async (req, res, next) => {
     let token = header.startsWith('Bearer') ? header.split(' ')[1] : null;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded.id);
     req.user = await UserService.get(decoded.id);
     next();
 })

@@ -23,8 +23,7 @@ const schema = new mongoose.Schema({
         required:true
     },
     imagePath:{
-        type:String,
-        required:true
+        type:String
     },
     partnerPays: [
         {

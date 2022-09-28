@@ -33,11 +33,9 @@ module.exports.getUserInfo = async (req) => {
 
   let user = await User.findById(userID);
   let organisations = await OrgUser.find({userID: userID}).populate('orgID');
-  console.log(user);
 
   var paymentList = [];
   for(var orgID in organisations){
-    //console.log(organisations[orgID])
     var totalPayment = 0
     var periods = organisations[orgID]['orgID']['periods']    
     for(var perID in periods)
