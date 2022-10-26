@@ -5,7 +5,7 @@ const router = express.Router();
 const auth = require("../middlewares/auth");
 let { validate } = require("../middlewares/validate");
 
-let { create, getUserInfo } = userController;
+let { create, getUserInfo, getUserByMail, getUserByID } = userController;
 let { checkAuth } = auth;
 
 router.post(
@@ -27,5 +27,7 @@ router.post(
 );
 
 router.get("/getUserInfo", checkAuth, getUserInfo);
+router.get("/:id", checkAuth, getUserByID)
+router.post("/getUserByMail", checkAuth, getUserByMail);
 
 module.exports = router;

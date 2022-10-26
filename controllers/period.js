@@ -19,8 +19,7 @@ module.exports.get = asyncHandler(async (req, res, next) => {
 // get all periods
 
 module.exports.finalize = asyncHandler(async(req, res, next)=> {
-    let orgID = req.params.id
-
+    let orgID = req.params.id    
     let period = await periodService.finalize(orgID);
     res.status(200).json({ success: true, data: period });
 })

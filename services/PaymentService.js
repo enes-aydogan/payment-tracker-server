@@ -4,17 +4,18 @@ const User = require("../models/User");
 const auth = require("../middlewares/auth");
 const OrgUser = require("../models/OrgUser");
 const mongoose = require("mongoose");
+const ErrorResponse = require("../utils/ErrorResponse");
 
 module.exports.create = async (orgID, req) => {
   let { description, price, stuffIDs } = req.body;
   let userID = req.user._id;
-
+  
   // find organization
   let organization = await Organization.findById(orgID).select("+periods");
   let period = organization.periods.find((s) => s.status == true);
 
-  //if(!period)
-  //return error
+  if(!period)
+    throw new ErrorResponse('Period cant find', 404)
 
   //stuffs
   let stuffs = [];
@@ -47,6 +48,7 @@ module.exports.create = async (orgID, req) => {
   organization.periods.find((s) => s.status == true).payments = period.payments;
 
   await organization.save();
+  await period.save();
 
   return payment;
 };
@@ -84,8 +86,8 @@ module.exports.getInfo = async (req) => {
 // get all own payments
 module.exports.ownPayments = async (req) => {
   let userID = req.user._id;
-  
-  let organisations = await OrgUser.find({ userID: userID })
+
+  let organisations = await OrgUser.find({ userID: userID, orgID: req.params.orgID})
     .populate("orgID")
     .lean();
 
@@ -179,27 +181,29 @@ module.exports.ownPastPayments = async (req) => {
   for (var orgID in organisations) {
     var periods = organisations[orgID]["orgID"]["periods"];
     for (var perID in periods) {
-      if (!periods[perID]["status"]) {
-        paymentList = [];
-
-        var payments = periods[perID]["payments"];
-        for (var paymentID in payments) {
-          if (payments[paymentID]["ownerID"].toString() == userID) {
-
-            var payment = payments[paymentID];
-            for (var pID in payment["partnerPays"]) {
-              var user = await User.findById(
-                payment["partnerPays"][pID].PartnerId
-              );
-
-              payment["partnerPays"][pID].FullName =
-                user.firstName + " " + user.lastName;
+      if(periods[perID]._id == req.params.perID){
+        if (!periods[perID]["status"]) {
+          paymentList = [];
+  
+          var payments = periods[perID]["payments"];
+          for (var paymentID in payments) {
+            if (payments[paymentID]["ownerID"].toString() == userID) {
+  
+              var payment = payments[paymentID];
+              for (var pID in payment["partnerPays"]) {
+                var user = await User.findById(
+                  payment["partnerPays"][pID].PartnerId
+                );
+  
+                payment["partnerPays"][pID].FullName =
+                  user.firstName + " " + user.lastName;
+              }
+              paymentList.push(payment);
             }
-            paymentList.push(payment);
           }
+  
+          periodList.push({period: {periodName: periods[perID].periodName, perID: periods[perID]._id, createdDate: periods[perID].createdDate}, payments: paymentList})
         }
-
-        periodList.push({period: {periodName: periods[perID].periodName, createdDate: periods[perID].createdDate}, payments: paymentList})
       }
     }
   }
@@ -220,36 +224,51 @@ module.exports.ownPastDebt = async (req) => {
 
   for (var orgID in organisations) {
     var periods = organisations[orgID]["orgID"]["periods"];
+    
     for (var perID in periods) {
-      if (periods[perID]["status"] == false) {
-        
-        debtList = [];
-        var payments = periods[perID]["payments"];
-        for (var paymentID in payments) {
-          var payment = payments[paymentID];
-          var owner = await User.findById(
-            payments[paymentID]["ownerID"].toString()
-          );
-          payments[paymentID].FullName = owner.firstName + " " + owner.lastName;
-          for (var pID in payment["partnerPays"]) {
-            var user = await User.findById(
-              payment["partnerPays"][pID].PartnerId
+      if(periods[perID]._id == req.params.perID){
+        if (periods[perID]["status"] == false) {
+          
+          debtList = [];
+          var payments = periods[perID]["payments"];
+          for (var paymentID in payments) {
+            var payment = payments[paymentID];
+            var owner = await User.findById(
+              payments[paymentID]["ownerID"].toString()
             );
-
-            payment["partnerPays"][pID].FullName =
-              user.firstName + " " + user.lastName;
-
-            if (payment["partnerPays"][pID].PartnerId.toString() == userID) {
-              debtList.push(payment);
+            payments[paymentID].FullName = owner.firstName + " " + owner.lastName;
+            for (var pID in payment["partnerPays"]) {
+              var user = await User.findById(
+                payment["partnerPays"][pID].PartnerId
+              );
+  
+              payment["partnerPays"][pID].FullName =
+                user.firstName + " " + user.lastName;
+  
+              if (payment["partnerPays"][pID].PartnerId.toString() == userID) {
+                debtList.push(payment);
+              }
             }
+  
+            periodList.push({period: {periodName: periods[perID].periodName, createdDate: periods[perID].createdDate}, debts: debtList})
+  
           }
-
-          periodList.push({period: {periodName: periods[perID].periodName, createdDate: periods[perID].createdDate}, debts: debtList})
-
         }
       }
+
     }
   }
   
   return periodList;
 };
+
+module.exports.getAllPastPayments = async (req) => {
+  let userID = req.user._id;  
+  let organisations = await OrgUser.find({ userID: userID, orgID: req.params.orgID })
+    .populate("orgID")
+    .lean();
+
+    var periods = organisations[0]["orgID"]["periods"];
+    var passPeriods = periods.filter(p => p.status == false)
+   return passPeriods
+}

@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
         type: String,
         require: true
     },
-    adress:{
+    address:{
         type: String
     },
     periods: [

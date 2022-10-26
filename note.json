@@ -1,0 +1,36 @@
+{
+    "success": true,
+    "data": [
+        {
+            "orgID": "6334ae7d7844b348edc4a6ac",
+            "orgName": "Turkuaz Apartmanı",
+            "users": [
+                {
+                    "userID": "6334ae047844b348edc4a6a8",
+                    "firstName": "Enes Test"
+                }
+            ]
+        }
+    ]
+},
+
+{
+    "success": true,
+    "data": [
+        {
+            "orgID": "6334ae7d7844b348edc4a6ac",
+            "orgName": "Turkuaz Apartmanı",
+            "users": [
+                {
+                    "userID": "6346a155eeefa37c936365e2",
+                    "firstName": "Bülen Test"
+                }
+            ]
+        },
+        {
+            "orgID": "63404caf8b081f5335207bff",
+            "orgName": "Polen Apartmanı",
+            "users": []
+        }
+    ]
+}

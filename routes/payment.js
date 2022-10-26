@@ -6,16 +6,17 @@ const auth = require("../middlewares/auth");
 const { check } = require("express-validator");
 const { route } = require("./users");
 
-let { create, getInfo, ownPayments, ownDebt, ownPastPayments, ownPastDebt } = paymentController;
+let { create, getInfo, ownPayments, ownDebt, ownPastPayments, ownPastDebt, getAllPastPayments } = paymentController;
 let { checkAuth } = auth;
 
 router.post("/:id", checkAuth, uploadImage, create);
 
 router.get("/getInfo", checkAuth, getInfo);
-router.get("/ownPayments", checkAuth, ownPayments);
+router.get("/ownPayments/:orgID", checkAuth, ownPayments);
 router.get("/ownDebt", checkAuth, ownDebt);
-router.get("/ownPastPayments", checkAuth, ownPastPayments);
-router.get("/ownPastDebt", checkAuth, ownPastDebt);
+router.get("/ownPastPayments/:perID", checkAuth, ownPastPayments);
+router.get("/ownPastDebt/:perID", checkAuth, ownPastDebt);
+router.get("/allPastPayments/:orgID", checkAuth, getAllPastPayments);
 
 
 module.exports = router;

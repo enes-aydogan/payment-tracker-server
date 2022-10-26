@@ -7,3 +7,8 @@ module.exports.create = asyncHandler(async (req, res, next) => {
   res.status(201).json({ success: true, data: organization });
 });
 
+module.exports.getAll = asyncHandler(async (req, res, next) => {
+  let userID = req.params.id
+  let organizations = await orgService.getAll(userID);
+  res.status(201).json({ success: true, data: organizations });
+});

@@ -27,6 +27,7 @@ module.exports.get = async (id) => {
 
 // organization id
 module.exports.finalize = async (id) => {
+
     let organization = await Organization.findById(id).select('+periods');
     let period = organization.periods.find((s) => s.status == true);
     let loan = {}
@@ -68,18 +69,20 @@ module.exports.finalize = async (id) => {
     // set status of period
     //period.status = false;
     organization.periods.find((s) => s.status == true).status = false;
-
+    
     var date = new Date()
-    dateStr = date.getMonth()+'/'+ date.getDate()+'/'+date.getFullYear()
+
+    let month = date.getMonth() + 1
+    dateStr = month +'/'+ date.getDate() +'/'+date.getFullYear()
 
     period = {
         periodName: dateStr + ' Dönemi',
         payments: []
     }
-
+    
     organization.periods.push(period);
 
     await organization.save()
-
+    
     return period
 };

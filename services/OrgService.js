@@ -14,3 +14,9 @@ module.exports.create = async (req) => {
     
     return organization;
 }
+
+module.exports.getAll = async (userID) => {
+    let organization = await Organization.find({ownerID: userID})
+    
+    return organization   
+}

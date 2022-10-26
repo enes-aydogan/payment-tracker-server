@@ -21,8 +21,7 @@ module.exports.create = async (props) => {
 };
 
 module.exports.get = async (userID) => {
-  let user = await User.findById(userID);
-
+  let user = await User.findById(userID).select('-password');
   return user;
 };
 
@@ -30,8 +29,7 @@ module.exports.getUserInfo = async (req) => {
   let userID = req.user._id
 
   let userInfo = {}
-
-  let user = await User.findById(userID);
+  let user = await User.findById(userID);    
   let organisations = await OrgUser.find({userID: userID}).populate('orgID');
 
   var paymentList = [];
@@ -57,7 +55,17 @@ module.exports.getUserInfo = async (req) => {
     paymentList.push({orgName:organisations[orgID]['orgID']['name'], totalPayment: totalPayment})
 
   }
-  userInfo = {user:{firstName: user['firstName'], lastName: user['lastName']}, payments: paymentList}
-
+  userInfo = {user:{firstName: user['firstName'], lastName: user['lastName']}, payments: paymentList}  
   return userInfo;
 };
+
+module.exports.getUserByMail = async(req) => {
+  const {mail} = req.body;
+  
+  let user = await User.find({email: mail})
+  
+  if(user.length > 0)
+    return user[0]._id
+  
+  return null
+}
