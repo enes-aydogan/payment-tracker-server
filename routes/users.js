@@ -28,6 +28,6 @@ router.post(
 
 router.get("/getUserInfo", checkAuth, getUserInfo);
 router.get("/:id", checkAuth, getUserByID)
-router.post("/getUserByMail", checkAuth, getUserByMail);
+router.post("/getUserByMail", getUserByMail);
 
 module.exports = router;
