@@ -284,7 +284,7 @@ module.exports.getAllPastPayments = async (req) => {
     .lean();
 
   var periods = organisations[0]["orgID"]["periods"];
-  console.log("periods", periods);
+
   var passPeriods = periods.filter((p) => p.status == false);
   return passPeriods;
 };
@@ -299,7 +299,7 @@ module.exports.getAllPastPaymentsByPerID = async (req) => {
     .lean();
 
   var periods = organisations[0]["orgID"]["periods"];
-  console.log("periods", periods);
+
   var passPeriods = periods.filter(
     (p) => p.status == false && p._id == req.params.perID
   );
