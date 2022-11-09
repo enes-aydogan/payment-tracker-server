@@ -285,9 +285,7 @@ module.exports.getAllPastPayments = async (req) => {
 
   var periods = organisations[0]["orgID"]["periods"];
   console.log("periods", periods);
-  var passPeriods = periods.filter(
-    (p) => p.status == false && p._id == "634e9f2b94b1d5c560e84a8d"
-  );
+  var passPeriods = periods.filter((p) => p.status == false);
   return passPeriods;
 };
 
