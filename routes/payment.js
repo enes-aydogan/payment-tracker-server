@@ -27,7 +27,7 @@ router.get("/ownPastPayments/:perID", checkAuth, ownPastPayments);
 router.get("/ownPastDebt/:perID", checkAuth, ownPastDebt);
 router.get("/allPastPayments/:orgID", checkAuth, getAllPastPayments);
 router.get(
-  "/allPastPayments/:orgID/:perID",
+  "/allPastPaymentsByPerID/:orgID/:perID",
   checkAuth,
   getAllPastPaymentsByPerID
 );
