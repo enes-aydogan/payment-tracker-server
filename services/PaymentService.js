@@ -305,3 +305,18 @@ module.exports.getAllPastPaymentsByPerID = async (req) => {
   );
   return passPeriods;
 };
+
+module.exports.getActivePeriod = async (req) => {
+  let userID = req.user._id;
+  let organisations = await OrgUser.find({
+    userID: userID,
+    orgID: req.params.orgID,
+  })
+    .populate("orgID")
+    .lean();
+
+  var periods = organisations[0]["orgID"]["periods"];
+
+  var activePeriod = periods.filter((p) => p.status == true);
+  return activePeriod;
+};

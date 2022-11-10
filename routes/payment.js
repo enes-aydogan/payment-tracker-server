@@ -15,6 +15,7 @@ let {
   ownPastDebt,
   getAllPastPayments,
   getAllPastPaymentsByPerID,
+  getActivePeriod,
 } = paymentController;
 let { checkAuth } = auth;
 
@@ -31,5 +32,6 @@ router.get(
   checkAuth,
   getAllPastPaymentsByPerID
 );
+router.get("/getActivePeriod/:orgID", checkAuth, getActivePeriod);
 
 module.exports = router;

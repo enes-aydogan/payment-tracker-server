@@ -47,3 +47,7 @@ module.exports.getAllPastPaymentsByPerID = asyncHandler(
     res.status(200).json({ success: true, data: payments });
   }
 );
+module.exports.getActivePeriod = asyncHandler(async (req, res, next) => {
+  let payments = await paymentService.getActivePeriod(req);
+  res.status(200).json({ success: true, data: payments });
+});
