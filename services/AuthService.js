@@ -17,7 +17,6 @@ module.exports.login = async (email, password) => {
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
-
   return {
     user: user,
     token: token,
