@@ -6,8 +6,7 @@ const auth = require("../middlewares/auth");
 let { create, getUsersByOrgID, getOrgsByUserID } = orgUserController;
 let { checkAuth } = auth;
 
-
-router.post("/", create);
+router.post("/:userID/:orgID", create);
 router.get("/getOrgsByUserID", checkAuth, getOrgsByUserID);
 router.get("/:id", checkAuth, getUsersByOrgID);
 

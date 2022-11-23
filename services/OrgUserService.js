@@ -1,39 +1,39 @@
-const OrgUser = require('../models/OrgUser');
-const ErrorResponse = require('../utils/ErrorResponse');
+const OrgUser = require("../models/OrgUser");
+const ErrorResponse = require("../utils/ErrorResponse");
 
 module.exports.create = async (orgID, userID) => {
+  let isExist = await OrgUser.find({ orgID: orgID, userID: userID });
 
-    
-    let isExist = await OrgUser.find({orgID: orgID, userID: userID})
+  if (isExist.length > 0) {
+    return [];
+  }
+  console.log("after return");
+  let orgUser = new OrgUser({
+    orgID: orgID,
+    userID: userID,
+  });
 
-    if(isExist.length > 0){
-        throw new ErrorResponse("This user already exist", 401)
-    }
+  await orgUser.save();
 
-    let orgUser = new OrgUser({
-        orgID: orgID,
-        userID: userID
-    });
+  console.log("work org-user", orgUser);
+  return orgUser;
+};
 
-    await orgUser.save();
-    
-    return orgUser;
-}
+module.exports.getUsersByOrgID = async (orgID, userID) => {
+  let users = await OrgUser.find({
+    orgID: orgID,
+    userID: { $ne: userID },
+  }).populate("userID");
 
-module.exports.getUsersByOrgID = async(orgID, userID) => {
-    let users = await OrgUser.find({ orgID: orgID, userID: {$ne: userID} }).populate("userID");
-    
-    if(users.length < 1)
-        return []
+  if (users.length < 1) return [];
 
-    return users
-}
+  return users;
+};
 
-module.exports.getOrgsByUserID = async(userID) => {
-    let orgs = await OrgUser.find({ userID: userID }).populate("orgID");
+module.exports.getOrgsByUserID = async (userID) => {
+  let orgs = await OrgUser.find({ userID: userID }).populate("orgID");
+  console.log(orgs);
+  if (!orgs) throw new ErrorResponse("Orgs cant find", 404);
 
-    if(!orgs)
-        throw new ErrorResponse("Orgs cant find", 404);
-    
-    return orgs
-}
+  return orgs;
+};
