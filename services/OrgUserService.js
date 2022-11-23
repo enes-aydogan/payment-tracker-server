@@ -7,7 +7,7 @@ module.exports.create = async (orgID, userID) => {
   if (isExist.length > 0) {
     return [];
   }
-  console.log("after return");
+
   let orgUser = new OrgUser({
     orgID: orgID,
     userID: userID,
@@ -15,7 +15,6 @@ module.exports.create = async (orgID, userID) => {
 
   await orgUser.save();
 
-  console.log("work org-user", orgUser);
   return orgUser;
 };
 
@@ -32,7 +31,7 @@ module.exports.getUsersByOrgID = async (orgID, userID) => {
 
 module.exports.getOrgsByUserID = async (userID) => {
   let orgs = await OrgUser.find({ userID: userID }).populate("orgID");
-  console.log(orgs);
+
   if (!orgs) throw new ErrorResponse("Orgs cant find", 404);
 
   return orgs;

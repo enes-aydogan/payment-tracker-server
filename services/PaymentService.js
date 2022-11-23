@@ -1,7 +1,6 @@
 const Organization = require("../models/Organization");
 const Period = require("../models/Period");
 const User = require("../models/User");
-const auth = require("../middlewares/auth");
 const OrgUser = require("../models/OrgUser");
 const mongoose = require("mongoose");
 const ErrorResponse = require("../utils/ErrorResponse");
@@ -319,4 +318,64 @@ module.exports.getActivePeriod = async (req) => {
 
   var activePeriod = periods.filter((p) => p.status == true);
   return activePeriod;
+};
+
+module.exports.deletePayment = async (orgID, paymentID) => {
+  let organization = await Organization.findById(orgID);
+
+  if (!organization) {
+    throw new ErrorResponse(
+      `Organization with id ${orgID} not found and deleted `,
+      404
+    );
+  }
+  organization.periods.at(-1).payments.splice(
+    organization.periods.at(-1).payments.findIndex((s) => s._id == paymentID),
+    1
+  );
+  await organization.save();
+  return organization.periods.at(-1).payments;
+};
+
+module.exports.updatePayment = async (orgID, paymentID, props) => {
+  let { description, price } = props;
+  console.log(props);
+  let organization = await Organization.findById(orgID);
+
+  if (!organization) {
+    throw new ErrorResponse(
+      `Organization with id ${orgID} not found and deleted `,
+      404
+    );
+  }
+
+  if (description)
+    organization.periods
+      .at(-1)
+      .payments.find((p) => p._id == paymentID).description = description;
+
+  if (price) {
+    organization.periods.at(-1).payments.find((p) => p._id == paymentID).price =
+      price;
+
+    let partnerPrice =
+      price /
+      (organization.periods.at(-1).payments.find((p) => p._id == paymentID)
+        .partnerPays.length +
+        1);
+
+    const forLenght = organization.periods
+      .at(-1)
+      .payments.find((p) => p._id == paymentID).partnerPays.length;
+
+    for (var i = 0; i < forLenght; i++) {
+      organization.periods
+        .at(-1)
+        .payments.find((p) => p._id == paymentID).partnerPays[i].PartnerPrice =
+        partnerPrice;
+    }
+  }
+
+  await organization.save();
+  return organization.periods.at(-1).payments;
 };

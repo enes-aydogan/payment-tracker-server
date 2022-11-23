@@ -16,6 +16,8 @@ let {
   getAllPastPayments,
   getAllPastPaymentsByPerID,
   getActivePeriod,
+  deletePayment,
+  updatePayment,
 } = paymentController;
 let { checkAuth } = auth;
 
@@ -33,5 +35,6 @@ router.get(
   getAllPastPaymentsByPerID
 );
 router.get("/getActivePeriod/:orgID", checkAuth, getActivePeriod);
-
+router.delete("/:id/:orgID", checkAuth, deletePayment);
+router.put("/:id/:orgID", checkAuth, updatePayment);
 module.exports = router;

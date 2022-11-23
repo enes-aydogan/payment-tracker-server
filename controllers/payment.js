@@ -51,3 +51,35 @@ module.exports.getActivePeriod = asyncHandler(async (req, res, next) => {
   let payments = await paymentService.getActivePeriod(req);
   res.status(200).json({ success: true, data: payments });
 });
+module.exports.deletePayment = asyncHandler(async (req, res, next) => {
+  try {
+    let paymentID = req.params.id;
+    let orgID = req.params.orgID;
+    let payments = await paymentService.deletePayment(orgID, paymentID);
+    res.status(200).json({ success: true, data: payments });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      data: null,
+      error: { message: error.message, statusCode: error.statusCode },
+    });
+  }
+});
+module.exports.updatePayment = asyncHandler(async (req, res, next) => {
+  try {
+    let paymentID = req.params.id;
+    let orgID = req.params.orgID;
+    let payments = await paymentService.updatePayment(
+      orgID,
+      paymentID,
+      req.body
+    );
+    res.status(200).json({ success: true, data: payments });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      data: null,
+      error: { message: error.message, statusCode: error.statusCode },
+    });
+  }
+});
